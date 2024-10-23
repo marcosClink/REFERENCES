@@ -7,17 +7,24 @@
     <link rel="stylesheet" type="text/css" href="/styles/modal.css">
 </head>
 <body>
-    <div id="company">
-    <label id="welcomeMessage">Welcome, guest! To login, press <a id="openModal" > here</a></label>
-    <h1>מערכת תיעוד אסמכתאות</h1>
-    <img id="imagelogo" src="/clink-logo.png" alt="">
-</div>  
 
-    <!-- The Modal -->
-    <div id="loginModal" class="modal" style="display: none;">
-        <div id="login-content"class="modal-content">
-            <!--CONTENT-->
+    <div class="header">
+        <div>
+            <img src="/clink-logo.png" alt="Logo" class="logo">
         </div>
+        <div>
+            <h1>מערכת תיעוד אסמכתאות</h1>
+        </div>
+        <div class="login-div">
+            <label id="login-label" for="">שלום! להתחברות <a id="openModal">לחץ כאן</a> </label>
+           <div id="loginModal" class="modal" style="display: none;">
+               <div id="login-content" class="modal-content">
+                   <!--CONTENT-->
+               </div>
+           </div>
+       </div>
+    </div>
+
     </div>
 
     <!-- Action and Search Container -->

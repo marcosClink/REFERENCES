@@ -69,7 +69,32 @@ document.addEventListener('DOMContentLoaded', function () {
             tableBody.appendChild(row);
         });
         
-        sumRow();
+        const tranSums = data.map(item => parseFloat(item.tran_sum));
+        const refSums = data.map(item => parseFloat(item.ref_sum));
+// Calculate the total sum
+        const totalTranSum = tranSums.reduce((accumulator, currentValue) => {
+          if(isNaN(currentValue)) return accumulator;
+          else return accumulator + currentValue;         
+        }, 0);
+
+        const totalRefSum = refSums.reduce((accumulator, currentValue) => {
+          if(isNaN(currentValue)) return accumulator;
+          else return accumulator + currentValue;         
+        }, 0);
+
+        
+       sumRow.style.visibility  = 'visible';
+        sumTran.textContent = formatToIsraeliShekels(totalTranSum);
+        sumRef.textContent = formatToIsraeliShekels(totalRefSum);
+
+        if(data.length>0)
+            {
+                sumRow.style.visibility  = 'visible';
+            }
+          else
+                {
+                    sumRow.style.visibility  = 'hidden';
+                }
         
         // Attach event handlers for edit links
         document.querySelectorAll('.edit-link').forEach(link => {
@@ -87,35 +112,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
-    void function sumRow()
-    {
-        const tranSums = data.map(item => parseFloat(item.tran_sum));
-        const refSums = data.map(item => parseFloat(item.ref_sum));
-// Calculate the total sum
-        const totalTranSum = tranSums.reduce((accumulator, currentValue) => {
-          if(isNaN(currentValue)) return accumulator;
-          else return accumulator + currentValue;         
-        }, 0);
-
-        const totalRefSum = refSums.reduce((accumulator, currentValue) => {
-          if(isNaN(currentValue)) return accumulator;
-          else return accumulator + currentValue;         
-        }, 0);
-
-        
-        sumRow.style.visibility  = 'visible';
-        sumTran.textContent = formatToIsraeliShekels(totalTranSum);
-        sumRef.textContent = formatToIsraeliShekels(totalRefSum);
-
-        if(data.length>0)
-            {
-                sumRow.style.visibility  = 'visible';
-            }
-          else
-                {
-                    sumRow.style.visibility  = 'hidden';
-                }
-    }
 
 
     function colorRowsAttention(ref,row){

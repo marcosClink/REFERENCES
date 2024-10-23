@@ -3,7 +3,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     var modal = document.getElementById('loginModal');
     var link = document.getElementById('openModal');
-    const labelWel = document.getElementById('welcomeMessage');
+    const labelWel = document.getElementById('login-label');
     const modalContent = document.getElementById('login-content');
 
     //starting permission block:
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
     link.addEventListener('click', event => {
         event.preventDefault(); // Prevent default anchor action
 
-        fetch('/login.html')
+        fetch('/views/login.html')
             .then(response => response.text())
             .then(html => {
 
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
     //here it only give permission to elements, download and edit will be in the renderTable func
     function permissionsElements(permission,username)
     {
-        labelWel.textContent = "wlecome " + username;
+        labelWel.textContent = username + " ברוך הבא ";
         var elements = [];
         var element1;
         var div1=[],div2=[];

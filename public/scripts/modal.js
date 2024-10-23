@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to open add modal and handle form submission
     function openAddModal() {
-        fetch('/add_form.html')
+        fetch('/views/add_form.html')
             .then(response => response.text())
             .then(html => {
                 const modalContent = modal.querySelector('.modal-content');
@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     function openEditModal(doc) {
-        fetch('/edit_form.html') // Fetch edit form HTML
+        fetch('/views/edit_form.html') // Fetch edit form HTML
             .then(response => {
                 if (!response.ok) throw new Error('Network response was not ok');
                 return response.text();

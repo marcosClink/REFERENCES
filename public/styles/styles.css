@@ -9,9 +9,27 @@
 
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
+    margin: 0px;
     background-color: var(--cream);
     color: #333;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #f1f1f1;
+    margin-bottom: 20px;
+}
+
+#login-label {
+    margin-right: 20px;
+}
+
+.logo {
+    width: 200px;
+    margin-left: 20px;
 }
 
 h1 {
@@ -20,14 +38,12 @@ h1 {
     width: 100%;
 }
 
-
 #all-actions{
+    margin-right: 15px;
     justify-content: flex-start;
     margin-left: 15px;
-    margin-bottom: 30px;
-    width: 100%;
+     margin-bottom: 30px;
 }
-
 
 
 #action-search-container {
@@ -115,9 +131,10 @@ input {
 /* General table styles */
 #table-part{
     margin-left: 15px;
+    margin-right: 15px;
 }
 table {
-    width: 100%; /* Set the table width */
+  
     border-collapse: collapse; /* Collapse borders for cleaner look */
     background-color: var(--grey) ;/* Set background color */
     max-height: 300px;
@@ -168,6 +185,7 @@ th {
 /* Ensure the header table uses fixed layout as well */
 #references-table,#references-table-sum {
     table-layout: fixed; /* Keeps columns fixed in size */
+    width: 100%; /* Important for table alignment */
     max-height: 300px;
 }
 
@@ -183,27 +201,6 @@ th {
     text-align: center; /* Center text */
 }
 
-#company{
-    width: 100%;
-    align-items: center;
-    display:flex;
-}
-#welcomeMessage{
-    float: left;
-}
-
-#imagelogo{
-   /* position: absolute;
-    left: 670px;
-    top: 100px;*/
-    float: right;
-    width: 200px; /* Set the desired width */
-    height: 150px; /* Set the desired height */
-    object-fit: cover; 
-    height: auto; /* Maintain aspect ratio */
-    z-index: 900; /* Ensure image sits in front of other elements */
-    
-}
 
 .sum-tran-date,
 .sum-ref-date {
@@ -220,10 +217,6 @@ th {
     left: 1150px;
 }
 
-#delete-row-div{
-    visibility: hidden;
-    float: right;
-}
 
 #line1,#line2{
     width: 100%;
