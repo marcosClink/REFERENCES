@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/55501f7e-bef8-45dc-b3df-649922477fbc/resourceGroups/popuptest_group/providers/Microsoft.Web/sites/popuptest",
+    "appService.deploySubpath": "."
+}

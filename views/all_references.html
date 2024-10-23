@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reference Documentation System</title>
+    <link rel="stylesheet" type="text/css" href="/styles/styles.css">
+    <link rel="stylesheet" type="text/css" href="/styles/modal.css">
+</head>
+<body>
+    <div id="company">
+    <label id="welcomeMessage">Welcome, guest! To login, press <a id="openModal" > here</a></label>
+    <h1>מערכת תיעוד אסמכתאות</h1>
+    <img id="imagelogo" src="/clink-logo.png" alt="">
+</div>  
+
+    <!-- The Modal -->
+    <div id="loginModal" class="modal" style="display: none;">
+        <div id="login-content"class="modal-content">
+            <!--CONTENT-->
+        </div>
+    </div>
+
+    <!-- Action and Search Container -->
+    <label for="upload-file" id="label-upload-tran">להעלאת קובץ טרנזקציות לחץ כאן</label>
+    <div id="all-actions">
+        <div id="btn-functions">
+            <div id="line1">
+                    <button id="open-modal">הוסף אסמכתא</button>
+                    <input type="file" id="fileInput" accept=".csv, .xlsx"/>
+                <div id="sum-date-func">
+                    <button id="sum-date">חשב תאריך</button>
+                    <input type="date" id="date-input" />
+                    <select name="date-options" id="date-options" >
+                        <option value="tran_date">תאריך טרנזקציה</option>
+                        <option value="ref_date">תאריך העברה</option>
+                    </select>
+                    
+                </div>
+            </div>
+            <div id="line2">
+                <button id="ref-treat">אסמכתאות לטיפול</button>
+                <button id="ref-late">אסמכתאות באיחור</button>
+                <button id="all-references" > כל האסמכתאות</button>   
+                <div id="action-search-container">
+                    <input type="text" id="search-input" placeholder="הכנס ערך לחיפש"/>
+                    <select name="search-options" id="search-options" >
+                        <option value="tran_num">מספר טרנזקציה</option>
+                        <option value="ref_num">מספר אסמכתא</option>
+                    </select>
+                </div>
+            </div> 
+        </div>
+        
+    </div>
+    <div id="table-part">
+        <div id="table-wrapper">
+            <table id="references-table">
+                <thead>
+                    <tr>
+                        <th data-column="doc_unique" class="sortable">מספר סידורי</th>
+                        <th data-column="tran_num" class="sortable">מספר טרנזקציה</th>
+                        <th data-column="tran_date" class="sortable">תאריך טרנזקציה</th>
+                        <th data-column="tran_sum" class="sortable">סכום טרנזקציה</th>
+                        <th data-column="ref_num" class="sortable">מספר אסמכתא</th>
+                        <th data-column="ref_date" class="sortable">תאריך העברה</th>
+                        <th data-column="ref_sum" class="sortable">סכום העברה</th>
+                        <th>קובץ להורדה</th>
+                        <th>edit</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div id="scrollable-body">
+                <table id="references-table">
+                    <tbody>
+                        <!-- Dynamic Content Here -->
+                    </tbody>
+                </table>
+        </div>
+        <table id="references-table-sum">
+            <thead>
+                <tr>
+                    <th data-column="doc_unique" class="sortable"></th>
+                    <th data-column="tran_num" class="sortable"></th>
+                    <th data-column="tran_date" class="sortable"></th>
+                    <th id = 'sum-tran' data-column="tran_sum" class="sortable"></th>
+                    <th data-column="ref_num" class="sortable"></th>
+                    <th data-column="ref_date" class="sortable"></th>
+                    <th id = 'sum-ref' data-column="ref_sum" class="sortable"></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+        </table>
+        <div id = delete-row-div>
+            <button id="delete-row-btn"> מחק </button>
+            <input type="text" id="delete-row-input" placeholder="הכנס ערך לחיפש">
+      </div>
+    
+    
+
+    <!-- Modal Structure -->
+    <div id="modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <!-- The content of add_form.html will be inserted here -->
+        </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script>
+        let referenceData = []; // Declare globally accessible referenceData
+    </script>
+    <script src="/scripts/modal.js" defer></script>
+    <script src="/scripts/fetchReferences.js" defer></script>
+    <script src="/scripts/search.js" defer></script>
+    <script src="/scripts/login.js" defer></script>
+    <script src="/scripts/functions.js"></script>
+
+</body>
+</html>
