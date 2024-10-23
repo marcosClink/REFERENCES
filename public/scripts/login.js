@@ -3,8 +3,19 @@
 document.addEventListener('DOMContentLoaded', function () {
     var modal = document.getElementById('loginModal');
     var link = document.getElementById('openModal');
-    const modalContent = document.getElementById('login-content');
     const labelWel = document.getElementById('welcomeMessage');
+    const modalContent = document.getElementById('login-content');
+
+    //starting permission block:
+    /*
+    const div = document.querySelector('#all-actions');
+    elements = div.querySelectorAll('button,input,select');
+    elements.forEach(element => {
+     //   element.disabled = false;
+       makeElementNotClickable(element);
+    });
+    */
+
     // Open modal on link click
     link.addEventListener('click', event => {
         event.preventDefault(); // Prevent default anchor action
@@ -12,10 +23,11 @@ document.addEventListener('DOMContentLoaded', function () {
         fetch('/login.html')
             .then(response => response.text())
             .then(html => {
+
                 modalContent.innerHTML = html; // Load form content
                 modal.style.display = 'flex'; // Show modal
 
-                const closeModal = document.getElementById('close');
+                const closeModal = document.getElementById('login-close');
                 if (closeModal) {
                     closeModal.addEventListener('click', function () {
                         modal.style.display = 'none';
@@ -38,14 +50,14 @@ document.addEventListener('DOMContentLoaded', function () {
                         })
                         .then(response => response.json())
                         .then(data => {
-                            if (data.message === 'success') {
+                            if (data.message == 'success') {
                                 console.log('Login success');
                                 window.sharedPermission = data.permission;
-                                permissionsElements(data.permission,data.username)
+                                permissionsElements(data.permission, data.username)
                                 modal.style.display = 'none'; // Optionally close the modal
                             } else {
-                                console.error('Login failed');
-                                alert('Invalid username or password');
+                                console.log('Login failed');
+                                alert('שם משתמש או סיסמא אינם נכונים');
                             }
                         })
                         .catch(error => console.error('Error:', error));
@@ -105,9 +117,16 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+
     function makeElementClickable(element) {
         element.classList.remove('not-clickable');
         element.classList.add('clickable');
     }
+
+    function makeElementNotClickable(element) {
+        // element.classList.remove('clickable');
+        element.classList.add('not-clickable');
+    }
+
     
 });

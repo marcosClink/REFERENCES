@@ -59,8 +59,6 @@ document.addEventListener('DOMContentLoaded', function () {
    
     function showAllReferences() {
     // Fetch reference data from the server
-    const password = prompt('Please enter your password:');
-    if(password=='marcos'){
     fetch('/api/references')
         .then(response => response.json())
         .then(data => {
@@ -73,9 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .catch(error => {
             console.error('Error fetching references:', error);
         });
-    }
-    else
-    alert("wrong password");
+   
     }
     btnALL.addEventListener('click', showAllReferences);
 

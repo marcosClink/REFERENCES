@@ -1,16 +1,16 @@
 const express = require('express');
 const path = require('path');
-const db = require('./db/database'); // Ensure this correctly points to your database setup
-const usersDb = require('./db/usersDB');
 const multer = require('multer');
 const fs = require('fs');
 const { permission } = require('process');
+const { db, usersDb } = require('./db');
+const { Console } = require('console');
 let docUnique;
 
 const app = express();
 
 // Define the absolute path to the uploads directory
-const uploadDirectory = path.join('/Users', 'marcospinto', 'projects', 'DOCUMENTS', 'references documentation', 'version2', 'files');
+const uploadDirectory = path.join('/Users', 'marcospinto', 'projects', 'DOCUMENTS', 'references documentation', 'version5', 'files');
 // Ensure the directory exists or create it
 if (!fs.existsSync(uploadDirectory)) {
   fs.mkdirSync(uploadDirectory, { recursive: true });
@@ -38,7 +38,7 @@ app.get('/', (req, res) => {
 
 // Fetch all references from the database
 app.get('/api/references', (req, res) => {
-    const query = 'SELECT doc_unique, tran_num, tran_date, tran_sum, ref_num, ref_date, ref_sum, ref_link FROM ref_doc ORDER BY tran_date DESC';
+    const query = 'SELECT doc_unique, tran_num, tran_date, tran_sum, ref_num, ref_date, ref_sum FROM ref_doc ORDER BY tran_date DESC';
 
     db.all(query, [], (err, rows) => {
         if (err) {
@@ -50,7 +50,7 @@ app.get('/api/references', (req, res) => {
 });
 
 app.get('/api/treat-references', (req, res) => {
-    const query1 = 'SELECT doc_unique, tran_num, tran_date, tran_sum, ref_num, ref_date, ref_sum, ref_link FROM ref_doc ORDER BY tran_date DESC';
+    const query1 = 'SELECT doc_unique, tran_num, tran_date, tran_sum, ref_num, ref_date, ref_sum FROM ref_doc ORDER BY tran_date DESC';
 
     const query = `
     SELECT
@@ -60,12 +60,11 @@ app.get('/api/treat-references', (req, res) => {
         tran_sum,
         ref_num,
         ref_date,
-        ref_sum,
-        ref_link
+        ref_sum
     FROM
         ref_doc 
     where
-    ref_num = '' or ref_date ='' or ref_sum = '' or ref_link =''
+    ref_num = '' or ref_date ='' or ref_sum = ''
     ORDER BY
         tran_date DESC
 `;
@@ -88,15 +87,13 @@ app.get('/api/late-references', (req, res) => {
             tran_sum,
             ref_num,
             ref_date,
-            ref_sum,
-            ref_link
+            ref_sum
         FROM ref_doc
         where 
         tran_date <= DATE('now', '-1 day') and (
             ref_num = '' or
             ref_sum = '' or
-            ref_date = '' OR
-            ref_link = '' )
+            ref_date = '' )
         ORDER BY tran_date DESC;
 `;
 
@@ -112,20 +109,14 @@ app.get('/api/late-references', (req, res) => {
 
 // Add a new reference to the database
 app.post('/api/add-reference', upload.single('file_ref'), (req, res) => {
-    const { tran_num, tran_date, tran_sum, ref_num, ref_date, ref_sum, ref_link } = req.body;
+    const { tran_num, tran_date, tran_sum, ref_num, ref_date, ref_sum } = req.body;
     const file = req.file;
   
-    if (!file) {
-      return res.status(400).send('No file uploaded.');
-    }
-  
-    console.log('Temporary file path:', file.path);  // For debugging
-  
     // Insert into database and get the unique identifier
-    const query = `INSERT INTO ref_doc (tran_num, tran_date, tran_sum, ref_num, ref_date, ref_sum, ref_link)
-                   VALUES (?, ?, ?, ?, ?, ?, ?)`;
+    const query = `INSERT INTO ref_doc (tran_num, tran_date, tran_sum, ref_num, ref_date, ref_sum)
+                   VALUES (?, ?, ?, ?, ?, ?)`;
   
-    db.run(query, [tran_num, tran_date, tran_sum, ref_num, ref_date, ref_sum, ref_link], function(err) {
+    db.run(query, [tran_num, tran_date, tran_sum, ref_num, ref_date, ref_sum], function(err) {
       if (err) {
         console.error('Error inserting new reference:', err);
         return res.status(400).send('Error adding reference');
@@ -133,6 +124,9 @@ app.post('/api/add-reference', upload.single('file_ref'), (req, res) => {
   
       const docUnique = this.lastID;  // Assuming this gives the last inserted ID
   
+      if (file) {
+  
+      console.log('Temporary file path:', file.path);  // For debugging
       // Construct the new filename and path with path.join
       const fileExt = path.extname(file.originalname);
       const newFilename = `R${docUnique}_${ref_num}${fileExt}`;
@@ -146,24 +140,23 @@ app.post('/api/add-reference', upload.single('file_ref'), (req, res) => {
           console.error('Error renaming file:', err);
           return res.status(500).send('File processing error');
         }
-  
-        console.log(`Added reference with ID: ${docUnique}`);
         console.log('File saved as:', newFilename);
-  
-        res.status(201).send('Reference added successfully');
       });
+        }
+      console.log(`Added reference with ID: ${docUnique}`);
+      res.status(201).send('Reference added successfully');
     });
   });
 
 app.put('/api/reference/:id', (req, res) => {
-    const { ref_num, ref_date, ref_sum, ref_link } = req.body;
+    const { ref_num, ref_date, ref_sum } = req.body;
     const { id } = req.params;
 
     const query = `UPDATE ref_doc 
-                   SET ref_num = ?, ref_date = ?, ref_sum = ?, ref_link = ?
+                   SET ref_num = ?, ref_date = ?, ref_sum = ?
                    WHERE doc_unique = ?`;
 
-    db.run(query, [ref_num, ref_date, ref_sum, ref_link, id], function(err) {
+    db.run(query, [ref_num, ref_date, ref_sum, id], function(err) {
         if (err) {
             console.error('Error updating reference:', err);
             return res.status(400).send("Error updating reference");
