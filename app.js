@@ -1,28 +1,12 @@
 const express = require('express');
 const path = require('path');
-const multer = require('multer');
-const fs = require('fs');
 const { permission } = require('process');
 const { db, usersDb } = require('./db');
 const { Console } = require('console');
 const { uploadFile , upload ,uploadDirectory} = require('./functions');
-let docUnique;
 
 const app = express();
 
-/*
-// Define the absolute path to the uploads directory
-const uploadDirectory = path.join('/Users', 'marcospinto', 'projects', 'DOCUMENTS', 'references documentation', 'version5', 'files');
-// Ensure the directory exists or create it
-if (!fs.existsSync(uploadDirectory)) {
-  fs.mkdirSync(uploadDirectory, { recursive: true });
-}
-
-// Configure multer to use the specified directory
-const upload = multer({
-  dest: uploadDirectory
-});
-*/
 
 const PORT = process.env.PORT || 4000;
 
@@ -124,7 +108,7 @@ app.post('/api/add-reference', upload.single('file_ref'), (req, res) => {
         return res.status(400).send('Error adding reference');
       }
   
-      docUnique = this.lastID;  // Assuming this gives the last inserted ID
+    var docUnique = this.lastID;  // Assuming this gives the last inserted ID
       if(file)
         if(!uploadFile(file,docUnique,ref_num))  return res.status(500).send('File processing error');
 
