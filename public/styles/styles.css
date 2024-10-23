@@ -168,7 +168,6 @@ th {
 /* Ensure the header table uses fixed layout as well */
 #references-table,#references-table-sum {
     table-layout: fixed; /* Keeps columns fixed in size */
-    width: 100%; /* Important for table alignment */
     max-height: 300px;
 }
 
