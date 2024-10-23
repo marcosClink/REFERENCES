@@ -19,7 +19,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Serve the main HTML page
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'all_references.html'));
+    res.sendFile(path.join(__dirname, 'public' ,'views', 'all_references.html'));
 });
 
 // Fetch all references from the database
