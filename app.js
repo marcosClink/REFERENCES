@@ -5,10 +5,12 @@ const fs = require('fs');
 const { permission } = require('process');
 const { db, usersDb } = require('./db');
 const { Console } = require('console');
+const { uploadFile , upload ,uploadDirectory} = require('./functions');
 let docUnique;
 
 const app = express();
 
+/*
 // Define the absolute path to the uploads directory
 const uploadDirectory = path.join('/Users', 'marcospinto', 'projects', 'DOCUMENTS', 'references documentation', 'version5', 'files');
 // Ensure the directory exists or create it
@@ -20,7 +22,7 @@ if (!fs.existsSync(uploadDirectory)) {
 const upload = multer({
   dest: uploadDirectory
 });
-
+*/
 
 const PORT = process.env.PORT || 4000;
 
@@ -122,37 +124,21 @@ app.post('/api/add-reference', upload.single('file_ref'), (req, res) => {
         return res.status(400).send('Error adding reference');
       }
   
-      const docUnique = this.lastID;  // Assuming this gives the last inserted ID
-  
-      if (file) {
-  
-      console.log('Temporary file path:', file.path);  // For debugging
-      // Construct the new filename and path with path.join
-      const fileExt = path.extname(file.originalname);
-      const newFilename = `R${docUnique}_${ref_num}${fileExt}`;
-      const newPath = path.join(uploadDirectory, newFilename);
-  
-      console.log('Renaming file to:', newPath);  // For debugging
-  
-      // Rename the file to use the new filename
-      fs.rename(file.path, newPath, (err) => {
-        if (err) {
-          console.error('Error renaming file:', err);
-          return res.status(500).send('File processing error');
-        }
-        console.log('File saved as:', newFilename);
-      });
-        }
+      docUnique = this.lastID;  // Assuming this gives the last inserted ID
+      if(file)
+        if(!uploadFile(file,docUnique,ref_num))  return res.status(500).send('File processing error');
+
       console.log(`Added reference with ID: ${docUnique}`);
       res.status(201).send('Reference added successfully');
     });
   });
 
-app.put('/api/reference/:id', (req, res) => {
+app.put('/api/update-reference/:id',  upload.single('file_ref') ,(req, res) => {
     const { ref_num, ref_date, ref_sum } = req.body;
     const { id } = req.params;
+    const file = req.file;
 
-    const query = `UPDATE ref_doc 
+   const query = `UPDATE ref_doc 
                    SET ref_num = ?, ref_date = ?, ref_sum = ?
                    WHERE doc_unique = ?`;
 
@@ -161,11 +147,13 @@ app.put('/api/reference/:id', (req, res) => {
             console.error('Error updating reference:', err);
             return res.status(400).send("Error updating reference");
         }
+        if(file)
+            if(!uploadFile(file,id,ref_num))  return res.status(500).send('File processing error');
+
 
         if (this.changes === 0) {
             return res.status(404).send("Reference not found");
         }
-
         console.log(`Updated reference with ID: ${id}`);
         res.send("Reference updated successfully");
     });

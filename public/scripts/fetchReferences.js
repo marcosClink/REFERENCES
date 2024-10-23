@@ -90,14 +90,14 @@ document.addEventListener('DOMContentLoaded', function () {
             var downloadLink;
             // Direct link to the file for download
             // Use either "/files" or "/download" based on the server setup
-            if(window.sharedPermission >=3)
+            if(window.sharedPermission >=3 || true)
                 {
                     editLink = `<a href="#" class="edit-link" data-id="${ref.doc_unique}">Edit</a>`;
                 }
             else{
                 editLink = "cant edit"
                  }
-            if(window.sharedPermission >=4)
+            if(window.sharedPermission >=3 || true)
                 {
            downloadLink = `<a href="/download/${filename}" target="_blank">Download</a>`;
                 }
@@ -158,7 +158,15 @@ document.addEventListener('DOMContentLoaded', function () {
         sumTran.textContent = formatToIsraeliShekels(totalTranSum);
         sumRef.textContent = formatToIsraeliShekels(totalRefSum);
 
-
+        if(data.length>0)
+            {
+                sumRow.style.visibility  = 'visible';
+            }
+          else
+                {
+                    sumRow.style.visibility  = 'hidden';
+                }
+        
         // Attach event handlers for edit links
         document.querySelectorAll('.edit-link').forEach(link => {
             link.addEventListener('click', function (event) {
@@ -167,6 +175,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const doc = referenceData.find(ref => ref.doc_unique === Number(docId));
 
                 if (doc) {
+                    console.log(doc.doc_unique);
                     window.openEditModal(doc); // Call the globally exposed edit modal function
                 }
             });

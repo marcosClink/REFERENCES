@@ -71,29 +71,29 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Populate edit form with the document data
                 document.getElementById('edit_tran_num').value = doc.tran_num;
                 document.getElementById('edit_tran_date').value = doc.tran_date;
-                document.getElementById('edit_tran_sum').value = doc.tran_sum;
+                document.getElementById('edit_tran_sum').value = window.formatToIsraeliShekels(doc.tran_sum);
                 document.getElementById('edit_ref_num').value = doc.ref_num;
                 document.getElementById('edit_ref_date').value = doc.ref_date;
-                document.getElementById('edit_ref_sum').value = formatToIsraeliShekels(doc.ref_sum);
-                document.getElementById('edit_ref_link').value = doc.ref_link;
+                document.getElementById('edit_ref_sum').value = doc.ref_sum;
 
+                console.log(doc.doc_unique);
                 // Enable form submission for updating the entry
                 document.getElementById('edit-reference-form').addEventListener('submit', function (event) {
                     event.preventDefault();
                     const formData = new FormData(this);
-                    const data = Object.fromEntries(formData.entries());
-
-                    fetch(`/api/reference/${doc.doc_unique}`, {
+                    //const data = Object.fromEntries(formData.entries());
+                    console.log(doc.doc_unique);
+                    fetch(`/api/update-reference/${doc.doc_unique}`, {
                         method: 'PUT', // Use PUT if you have RESTful semantics for updates
-                        headers: {
+                       /* headers: {
                             'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(data)
+                        },*/
+                        body: formData //JSON.stringify(data)
                     })
                     .then(response => {
                         if (!response.ok) throw new Error('Failed to update reference');
                         modal.style.display = 'none';
-                        return fetch('/') ;
+                        renderTable([]);
                       //  return fetch('/api/references');
                     })
                  //   .then(response => response.json())
@@ -123,16 +123,4 @@ document.addEventListener('DOMContentLoaded', function () {
 
     window.openEditModal = openEditModal; // Expose the function globally
 
-    function formatToIsraeliShekels(amount) {
-        // Create a formatter for Israeli Shekels and Hebrew/Israel locale
-        const formatter = new Intl.NumberFormat('he-IL', {
-            style: 'currency',
-            currency: 'ILS',
-            minimumFractionDigits: 2, // Ensures two decimal places
-            maximumFractionDigits: 2,
-        });
-    
-        // Format the number
-        return formatter.format(amount);
-    }
 }); // Closing the DOMContentLoaded event listener

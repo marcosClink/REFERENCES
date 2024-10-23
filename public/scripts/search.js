@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return valueToCheck && valueToCheck.toString().toLowerCase().includes(searchTerm);
         });
 
-
+        console.log(filteredData);
         renderTable(filteredData);
         })
 
