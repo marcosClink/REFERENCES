@@ -34,14 +34,14 @@ document.addEventListener('DOMContentLoaded', function () {
             var editLink;
             var downloadLink;
            
-            if(window.sharedPermission >=3 || true)
+            if(window.sharedPermission >=3)
                 {
                     editLink = `<a href="#" class="edit-link" data-id="${ref.doc_unique}">Edit</a>`;
                 }
             else{
                 editLink = "cant edit"
                  }
-            if(window.sharedPermission >=3 || true)
+            if(window.sharedPermission >=3 )
                 {
            downloadLink = `<a href="/download/${filename}" target="_blank">Download</a>`;
                 }
