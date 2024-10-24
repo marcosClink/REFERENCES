@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const { permission } = require('process');
 const { db, usersDb } = require('./db');
+const {query1} = require('./queries');
 const { Console } = require('console');
 const { uploadFile , upload ,uploadDirectory} = require('./functions');
 
@@ -157,6 +158,22 @@ app.get('/download/:filename', (req, res) => {
             console.error('File download error:', err);
             res.status(500).send('Error downloading file.');
         }
+    });
+});
+
+app.delete('/api/delete-trans/:id', (req, res) => {
+    const { id } = req.params;
+
+    db.run(`delete from ref_doc WHERE doc_unique = ?`,[id], function(err) {
+        if (err) {
+            console.error('Error deleting reference:', err);
+            return res.status(400).send("Error deleting reference");
+        }
+        if (this.changes === 0) {
+            res.status(400).send({ message: 'Reference not found' });
+        }
+        console.log(`deleted reference with ID: ${id}`);
+        res.status(200).send({ message: 'deleted successfully' });
     });
 });
 

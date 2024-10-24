@@ -76,30 +76,39 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('edit_ref_date').value = doc.ref_date;
                 document.getElementById('edit_ref_sum').value = doc.ref_sum;
 
-                console.log(doc.doc_unique);
+
                 // Enable form submission for updating the entry
                 document.getElementById('edit-reference-form').addEventListener('submit', function (event) {
                     event.preventDefault();
                     const formData = new FormData(this);
-                    //const data = Object.fromEntries(formData.entries());
-                    console.log(doc.doc_unique);
+
                     fetch(`/api/update-reference/${doc.doc_unique}`, {
-                        method: 'PUT', // Use PUT if you have RESTful semantics for updates
-                       /* headers: {
-                            'Content-Type': 'application/json'
-                        },*/
-                        body: formData //JSON.stringify(data)
+                        method: 'PUT', 
+                        body: formData 
                     })
                     .then(response => {
                         if (!response.ok) throw new Error('Failed to update reference');
                         modal.style.display = 'none';
                         renderTable([]);
-                      //  return fetch('/api/references');
                     })
-                 //   .then(response => response.json())
-                 //   .then(data => renderTable(data))
                     .catch(error => console.error('Error updating reference:', error));
                 });
+
+                function deleteTrans()
+                {
+                    fetch(`/api/delete-trans/${doc.doc_unique}`, {
+                        method: 'DELETE'
+                    })
+                    .then(response => {
+                        if (!response.ok) console.error("problem with server side")
+                       modal.style.display = 'none';
+                        alert(`הרשומה ${doc.doc_unique} נמחקה בהצלחה`);
+                        renderTable([]);
+                    })
+                    .catch(error => console.error('Error updating reference:', error));
+                   
+                }
+                document.getElementById("delete-trans").addEventListener('click',deleteTrans);
 
                 // Close modal on outside click
                 window.addEventListener('click', function (event) {
