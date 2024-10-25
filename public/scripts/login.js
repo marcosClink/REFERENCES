@@ -7,14 +7,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const modalContent = document.getElementById('login-content');
 
     //starting permission block:
-    
+    /*
     const div = document.querySelector('#all-actions');
     elements = div.querySelectorAll('button,input,select');
     elements.forEach(element => {
      //   element.disabled = false;
        makeElementNotClickable(element);
     });
-    
+    */
 
     // Open modal on link click
     link.addEventListener('click', event => {

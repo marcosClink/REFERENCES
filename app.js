@@ -1,10 +1,11 @@
 const express = require('express');
+const fs = require('fs');
 const path = require('path');
 const { permission } = require('process');
 const { db, usersDb } = require('./db');
-const {query1} = require('./queries');
+const {query} = require('./queries');
 const { Console } = require('console');
-const { uploadFile , upload ,uploadDirectory} = require('./functions');
+const { uploadFile , upload ,uploadDirectory,checkFileExists} = require('./functions');
 
 const app = express();
 
@@ -152,12 +153,29 @@ app.get('/download/:filename', (req, res) => {
     const filename = req.params.filename;
     const filePath = path.join(uploadDirectory, filename);
 
-    // Serve the file with a downloaded header
-    res.download(filePath, filename, (err) => {
+            // Serve the file with a downloaded header
+            res.download(filePath, filename, (err) => {
+            if (err) {
+                console.error('File download error:', err);
+                res.status(500).send('Error downloading file.');
+            }
+            });
+       
+});
+
+
+app.get('/api/check-file/:filename', (req, res) => {
+    const filename = req.params.filename;
+    const filePath = path.join(uploadDirectory, filename);
+
+    fs.access(filePath, fs.constants.F_OK, (err) => {
         if (err) {
-            console.error('File download error:', err);
-            res.status(500).send('Error downloading file.');
+            return res.json({ haveFile: false }); // Send response and exit
         }
+
+        // File exists
+        console.log(`File exists: ${filePath}`);
+        res.json({ haveFile: true }); // Send response
     });
 });
 

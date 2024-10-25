@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
 
-const uploadDirectory = path.join('/Users', 'marcospinto', 'projects', 'DOCUMENTS', 'references documentation', 'version5', 'files');
+const uploadDirectory = path.join('/Users', 'marcospinto', 'projects', 'DOCUMENTS', 'references-documentation', 'version5', 'files');
 // Ensure the directory exists or create it
 if (!fs.existsSync(uploadDirectory)) {
   fs.mkdirSync(uploadDirectory, { recursive: true });
@@ -33,8 +33,21 @@ fs.rename(file.path, newPath, (err) => {
 return true;
 }
 
+ function checkFileExists(filePath) {
+  
+    fs.access(filePath, fs.constants.F_OK, (err) => {
+        if (err) {
+            console.error('File does not exist or cannot be accessed:', err);
+            return false; // File does not exist
+        }
+        console.log('File exists.');
+        return true; // File exists
+    });
+}
+
 module.exports = {
     uploadFile,
     upload,
-    uploadDirectory
+    uploadDirectory,
+    checkFileExists
 }
