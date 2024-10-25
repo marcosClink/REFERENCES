@@ -38,8 +38,6 @@ app.get('/api/references', (req, res) => {
 });
 
 app.get('/api/treat-references', (req, res) => {
-    const query1 = 'SELECT doc_unique, tran_num, tran_date, tran_sum, ref_num, ref_date, ref_sum FROM ref_doc ORDER BY tran_date DESC';
-
     const query = `
     SELECT
         doc_unique,
@@ -179,8 +177,14 @@ app.get('/api/check-file/:filename', (req, res) => {
     });
 });
 
-app.delete('/api/delete-trans/:id', (req, res) => {
-    const { id } = req.params;
+app.delete('/api/delete-trans/:id', async (req, res) => {
+    const { id } = req.params; // Get the transaction ID from the URL
+    const { filename } = req.body; // Get the filename from the request body
+
+    console.log("Received request to delete transaction with ID:", id);
+    console.log("Filename to delete:", filename);
+    
+    const filePath = path.join(uploadDirectory, filename);
 
     db.run(`delete from ref_doc WHERE doc_unique = ?`,[id], function(err) {
         if (err) {
@@ -188,10 +192,27 @@ app.delete('/api/delete-trans/:id', (req, res) => {
             return res.status(400).send("Error deleting reference");
         }
         if (this.changes === 0) {
-            res.status(400).send({ message: 'Reference not found' });
+           return res.status(400).send({ message: 'Reference not found' });
         }
+
+        fs.access(filePath, fs.constants.F_OK, (err) => {
+            if (err) {
+               console.log("no file");
+            }
+            else
+            {
+                fs.unlink(filePath, (err) => {
+                    if (err) {
+                        console.error('Error deleting file:', err);
+                    }
+                    console.log('File deleted successfully:', filePath);
+                });
+            }
+        
+        });
+        
         console.log(`deleted reference with ID: ${id}`);
-        res.status(200).send({ message: 'deleted successfully' });
+        return res.status(200).send({ message: 'deleted successfully' });
     });
 });
 

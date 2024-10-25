@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Attach close functionality
                 const closeModal = modalContent.querySelector('.close');
                 if (closeModal) {
-                    closeModal.addEventListener('click', function() {
+                    closeModal.addEventListener('click', function () {
                         modal.style.display = 'none';
                     });
                 }
@@ -29,22 +29,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Handle form submission
                 const form = modalContent.querySelector('#add-reference-form');
                 if (form) {
-                    form.addEventListener('submit', function(event) {
+                    form.addEventListener('submit', function (event) {
                         event.preventDefault();
                         const formData = new FormData(this);
-                
+
                         fetch('/api/add-reference', {
                             method: 'POST',
                             body: formData
                         })
-                        .then(response => {
-                            if (!response.ok) throw new Error('Failed to add reference');
-                            modal.style.display = 'none'; // Hide modal after successful submission
-                           fetch('/'); // Refresh to main page
-                        })
-                        .catch(error => {
-                            console.error('Error adding reference:', error);
-                        });
+                            .then(response => {
+                                if (!response.ok) throw new Error('Failed to add reference');
+                                modal.style.display = 'none'; // Hide modal after successful submission
+                                fetch('/'); // Refresh to main page
+                            })
+                            .catch(error => {
+                                console.error('Error adding reference:', error);
+                            });
                     });
                 }
             })
@@ -83,32 +83,37 @@ document.addEventListener('DOMContentLoaded', function () {
                     const formData = new FormData(this);
 
                     fetch(`/api/update-reference/${doc.doc_unique}`, {
-                        method: 'PUT', 
-                        body: formData 
+                        method: 'PUT',
+                        body: formData
                     })
-                    .then(response => {
-                        if (!response.ok) throw new Error('Failed to update reference');
-                        modal.style.display = 'none';
-                        renderTable([]);
-                    })
-                    .catch(error => console.error('Error updating reference:', error));
+                        .then(response => {
+                            if (!response.ok) throw new Error('Failed to update reference');
+                            modal.style.display = 'none';
+                            renderTable([]);
+                        })
+                        .catch(error => console.error('Error updating reference:', error));
                 });
 
-                function deleteTrans()
-                {
+                function deleteTrans() {
+                    const fileExt = '.pdf'; // Make sure to adjust for the correct file extension
+                    const filename = encodeURIComponent(`R${doc.doc_unique}_${doc.ref_num}${fileExt}`);
                     fetch(`/api/delete-trans/${doc.doc_unique}`, {
-                        method: 'DELETE'
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json' // Indicate that you are sending JSON
+                        },
+                        body: JSON.stringify({filename})
                     })
-                    .then(response => {
-                        if (!response.ok) console.error("problem with server side")
-                       modal.style.display = 'none';
-                        alert(`הרשומה ${doc.doc_unique} נמחקה בהצלחה`);
-                        renderTable([]);
-                    })
-                    .catch(error => console.error('Error updating reference:', error));
-                   
+                        .then(response => {
+                            if (!response.ok) console.error("problem with server side")
+                            modal.style.display = 'none';
+                            alert(`הרשומה ${doc.doc_unique} נמחקה בהצלחה`);
+                            renderTable([]);
+                        })
+                        .catch(error => console.error('Error updating reference:', error));
+
                 }
-                document.getElementById("delete-trans").addEventListener('click',deleteTrans);
+                document.getElementById("delete-trans").addEventListener('click', deleteTrans);
 
                 // Close modal on outside click
                 window.addEventListener('click', function (event) {

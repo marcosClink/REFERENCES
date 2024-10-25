@@ -34,13 +34,13 @@ document.addEventListener('DOMContentLoaded', function () {
             var editLink;
             var downloadLink;
 
-            if (window.sharedPermission >= 3) {
+            if (window.sharedPermission >= 3|| window.modeDev) {
                 editLink = `<a href="#" class="edit-link" data-id="${ref.doc_unique}">עריכה</a>`;
             }
             else {
                 editLink = "לא ניתן לערוך"
             }
-            if (window.sharedPermission >= 4) {
+            if (window.sharedPermission >= 4 || window.modeDev ) {
              
                 downloadLink = `<a class="download-link" data-id="${filename}" target="_blank">אין קובץ מקושר</a>`;
 

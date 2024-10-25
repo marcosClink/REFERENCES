@@ -5,16 +5,17 @@ document.addEventListener('DOMContentLoaded', function () {
     var link = document.getElementById('openModal');
     const labelWel = document.getElementById('login-label');
     const modalContent = document.getElementById('login-content');
+    window.modeDev = true;
 
     //starting permission block:
-    /*
-    const div = document.querySelector('#all-actions');
-    elements = div.querySelectorAll('button,input,select');
-    elements.forEach(element => {
-     //   element.disabled = false;
-       makeElementNotClickable(element);
-    });
-    */
+    if (!modeDev) {
+        const div = document.querySelector('#all-actions');
+        elements = div.querySelectorAll('button,input,select');
+        elements.forEach(element => {
+            //   element.disabled = false;
+            makeElementNotClickable(element);
+        });
+    }
 
     // Open modal on link click
     link.addEventListener('click', event => {
@@ -48,66 +49,61 @@ document.addEventListener('DOMContentLoaded', function () {
                             },
                             body: JSON.stringify({ username, password })
                         })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.message == 'success') {
-                                console.log('Login success');
-                                window.sharedPermission = data.permission;
-                                permissionsElements(data.permission, data.username)
-                                modal.style.display = 'none'; // Optionally close the modal
-                            } else {
-                                console.log('Login failed');
-                                alert('שם משתמש או סיסמא אינם נכונים');
-                            }
-                        })
-                        .catch(error => console.error('Error:', error));
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.message == 'success') {
+                                    console.log('Login success');
+                                    window.sharedPermission = data.permission;
+                                    permissionsElements(data.permission, data.username)
+                                    modal.style.display = 'none'; // Optionally close the modal
+                                } else {
+                                    console.log('Login failed');
+                                    alert('שם משתמש או סיסמא אינם נכונים');
+                                }
+                            })
+                            .catch(error => console.error('Error:', error));
                     });
                 }
             });
     });
 
     //here it only give permission to elements, download and edit will be in the renderTable func
-    function permissionsElements(permission,username)
-    {
+    function permissionsElements(permission, username) {
         labelWel.textContent = username + " ברוך הבא ";
         var elements = [];
         var element1;
-        var div1=[],div2=[];
+        var div1 = [], div2 = [];
 
         //allow to see but not add/add-file/download/edit - 'VIEWER'
-       if(permission>=1) {
-            div1 = Array.from( document.querySelector('#line2').querySelectorAll('button,input,select'));
-            div2 = Array.from( document.querySelector('#sum-date-func').querySelectorAll('button,input,select'));
+        if (permission >= 1) {
+            div1 = Array.from(document.querySelector('#line2').querySelectorAll('button,input,select'));
+            div2 = Array.from(document.querySelector('#sum-date-func').querySelectorAll('button,input,select'));
             elements = div1.concat(div2);
-          }
+        }
         //allow to add manualy - 'ADDING'
-        if (permission>=2)
-            {
-                element1 = document.getElementById('open-modal');
-                elements.push(element1);
-            }
+        if (permission >= 2) {
+            element1 = document.getElementById('open-modal');
+            elements.push(element1);
+        }
         //allow to edit rows - 'EDITOR'
-        if(permission>=3)
-            {
-                //nothing here only in renderTable func
-            }
+        if (permission >= 3) {
+            //nothing here only in renderTable func
+        }
         //allow to add-file and download files - 'ALL-FUNCTIONS'
-        if (permission >= 4)
-        {
+        if (permission >= 4) {
             //donwload - in renderTable func
             element1 = document.getElementById('fileInput');
             elements.push(element1);
         }
         //admin - now nothing
-        if (permission >= 5)
-        {
+        if (permission >= 5) {
 
         }
-            elements.forEach(element => {
-                makeElementClickable(element);
-             });
+        elements.forEach(element => {
+            makeElementClickable(element);
+        });
 
-              
+
     }
 
     // Close modal when clicking outside of it
@@ -128,5 +124,5 @@ document.addEventListener('DOMContentLoaded', function () {
         element.classList.add('not-clickable');
     }
 
-    
+
 });
