@@ -220,24 +220,24 @@ app.post('/api/login', (req, res) => {
     const { username, password } = req.body;
 
     // Query the USERS database for the user's credentials
-    usersDb.get('SELECT username, password, doc_references_permission FROM users WHERE username = ?', [username], (err, row) => {
+    usersDb.get('SELECT username, password, doc_references_permission, name_worker FROM users WHERE username = ?', [username], (err, row) => {
         if (err) {
             console.error(err.message);
             return res.status(500).send('Server error');
         }
 
         if (!row) {
-            return res.status(404).send('User not found!');
+            return res.status(200).json({message:'User not found!'});
         }
 
         // Compare the provided password with the stored hashed password
         const isValidPassword = password == row.password ;
         if (!isValidPassword) {
-            return res.status(401).send('Invalid credentials!');
+            return res.status(200).json({message:'Invalid credentials!'});
         }
 
         // Respond with success message if login is successful
-        res.status(200).json({ message: 'success', username: row.username , permission:row.doc_references_permission});
+        res.status(200).json({ message: 'success', workername: row.name_worker , permission:row.doc_references_permission});
     });
 });
 // Start the server

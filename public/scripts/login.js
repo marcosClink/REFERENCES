@@ -54,22 +54,24 @@ document.addEventListener('DOMContentLoaded', function () {
                                 if (data.message == 'success') {
                                     console.log('Login success');
                                     window.sharedPermission = data.permission;
-                                    permissionsElements(data.permission, data.username)
+                                    permissionsElements(data.permission, data.workername)
                                     modal.style.display = 'none'; // Optionally close the modal
-                                } else {
+                                } 
+                                else {
                                     console.log('Login failed');
                                     alert('שם משתמש או סיסמא אינם נכונים');
                                 }
                             })
-                            .catch(error => console.error('Error:', error));
+                            .catch(error => console.error(error));
+                              
                     });
                 }
             });
     });
 
     //here it only give permission to elements, download and edit will be in the renderTable func
-    function permissionsElements(permission, username) {
-        labelWel.textContent = username + " ברוך הבא ";
+    function permissionsElements(permission, worker_name) {
+        labelWel.textContent = " ברוך הבא " + worker_name;
         var elements = [];
         var element1;
         var div1 = [], div2 = [];

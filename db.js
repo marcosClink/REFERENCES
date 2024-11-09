@@ -2,7 +2,7 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
-const db = new sqlite3.Database(path.join('/Users/marcospinto/projects/DB', 'clink_additions.db'), (err) => {
+const db = new sqlite3.Database(path.join( './db/refDb.db'), (err) => {
     if (err) {
         console.error('Error opening clink_additions database: ' + err.message);
     } else {
@@ -10,7 +10,7 @@ const db = new sqlite3.Database(path.join('/Users/marcospinto/projects/DB', 'cli
     }
 });
 
-const usersDb = new sqlite3.Database(path.join('/Users/marcospinto/projects/DB', 'USERS.db'), (err) => {
+const usersDb = new sqlite3.Database(path.join('./db/USERS.db'), (err) => {
     if (err) {
         console.error('Error opening USERS database: ' + err.message);
     } else {
