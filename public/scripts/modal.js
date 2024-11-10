@@ -69,9 +69,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 modal.style.display = 'flex';
 
                 // Populate edit form with the document data
+                document.getElementById('edit_id_buyer').value = doc.id_buyer;
                 document.getElementById('edit_tran_num').value = doc.tran_num;
                 document.getElementById('edit_tran_date').value = doc.tran_date;
                 document.getElementById('edit_tran_sum').value = window.formatToIsraeliShekels(doc.tran_sum);
+                document.getElementById('edit_id_seller').value = doc.id_seller;
                 document.getElementById('edit_ref_num').value = doc.ref_num;
                 document.getElementById('edit_ref_date').value = doc.ref_date;
                 document.getElementById('edit_ref_sum').value = doc.ref_sum;

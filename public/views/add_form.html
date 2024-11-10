@@ -2,6 +2,10 @@
 <span class="close">&times;</span>
 <h2>הוסף תיעוד</h2>
         <form id="add-reference-form" method="POST" action="/api/add-reference">
+
+            <label for="id_buyer">:תעודת זהות קונה</label>
+            <input type="text" id="id_buyer" name="id_buyer" >
+
             <label for="tran_num">:מספר טרנזקציה</label>
             <input type="text" id="tran_num" name="tran_num" required>
 
@@ -10,6 +14,9 @@
 
             <label for="tran_sum">:סכום טרנזקציה</label>
             <input type="number" id="tran_sum" name="tran_sum" min="0.1" step="any" required>
+
+            <label for="id_seller">:תעודת זהות מוכר</label>
+            <input type="text" id="id_seller" name="id_seller" >
 
             <label for="ref_num">:מספר אסמכתא</label>
             <input type="text" id="ref_num" name="ref_num" >

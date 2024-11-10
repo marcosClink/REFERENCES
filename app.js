@@ -100,7 +100,7 @@ app.get('/api/late-references', (req, res) => {
 
 // Add a new reference to the database
 app.post('/api/add-reference', upload.single('file_ref'), (req, res) => {
-    const { id_buyer,tran_num, tran_date, tran_sum, ref_num, ref_date, ref_sum } = req.body;
+    const { id_buyer,tran_num, tran_date, tran_sum, id_seller ,ref_num, ref_date, ref_sum } = req.body;
     const file = req.file;
   
     // Insert into database and get the unique identifier
