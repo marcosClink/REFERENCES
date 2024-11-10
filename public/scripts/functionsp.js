@@ -20,6 +20,8 @@ document.addEventListener('DOMContentLoaded', function () {
         var sumRow = document.getElementById('references-table-sum');
         var sumTran = document.getElementById('sum-tran');
         var sumRef = document.getElementById('sum-ref');
+        var countBuy = document.getElementById('count-buy');
+        var countSell = document.getElementById('count-sell');
         const tableBody = document.querySelector('#scrollable-body tbody');
 
 
@@ -73,6 +75,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const tranSums = data.map(item => parseFloat(item.tran_sum));
         const refSums = data.map(item => parseFloat(item.ref_sum));
+        const buyerCount = data.map(item => parseFloat(item.id_buyer));
+        const sellerCount = data.map(item => parseFloat(item.id_seller));
         // Calculate the total sum
         const totalTranSum = tranSums.reduce((accumulator, currentValue) => {
             if (isNaN(currentValue)) return accumulator;
@@ -84,10 +88,22 @@ document.addEventListener('DOMContentLoaded', function () {
             else return accumulator + currentValue;
         }, 0);
 
+        const totalbuyerCount = buyerCount.reduce((accumulator, currentValue) => {
+            if (isNaN(currentValue)) return accumulator;
+            else return accumulator + 1;
+        }, 0);
+
+        const totalsellerCount = sellerCount.reduce((accumulator, currentValue) => {
+            if (isNaN(currentValue)) return accumulator;
+            else return accumulator + 1;
+        }, 0);
+
 
         sumRow.style.visibility = 'visible';
         sumTran.textContent = formatToIsraeliShekels(totalTranSum);
         sumRef.textContent = formatToIsraeliShekels(totalRefSum);
+        countBuy.textContent = totalbuyerCount;
+        countSell.textContent = totalsellerCount
 
         if (data.length > 0) {
             sumRow.style.visibility = 'visible';
