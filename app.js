@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
 
 // Fetch all references from the database
 app.get('/api/references', (req, res) => {
-    const query = 'SELECT doc_unique, tran_num, tran_date, tran_sum, ref_num, ref_date, ref_sum FROM ref_doc ORDER BY tran_date DESC';
+    const query = 'SELECT doc_unique, id_buyer, tran_num, tran_date, tran_sum, id_seller, ref_num, ref_date, ref_sum FROM ref_doc ORDER BY tran_date DESC';
 
     db.all(query, [], (err, rows) => {
         if (err) {
@@ -41,16 +41,18 @@ app.get('/api/treat-references', (req, res) => {
     const query = `
     SELECT
         doc_unique,
+        id_buyer,
         tran_num,
         tran_date,
         tran_sum,
+        id_seller,
         ref_num,
         ref_date,
         ref_sum
     FROM
         ref_doc 
     where
-    ref_num = '' or ref_date ='' or ref_sum = ''
+    ref_num = '' or ref_date ='' or ref_sum = '' or id_seller =''
     ORDER BY
         tran_date DESC
 `;
@@ -68,9 +70,11 @@ app.get('/api/late-references', (req, res) => {
     const query = `
         SELECT
             doc_unique,
+            id_buyer,
             tran_num,
             tran_date,
             tran_sum,
+            id_seller,
             ref_num,
             ref_date,
             ref_sum
@@ -79,7 +83,8 @@ app.get('/api/late-references', (req, res) => {
         tran_date <= DATE('now', '-1 day') and (
             ref_num = '' or
             ref_sum = '' or
-            ref_date = '' )
+            ref_date = '' or
+            id_seller = '')
         ORDER BY tran_date DESC;
 `;
 
@@ -95,14 +100,14 @@ app.get('/api/late-references', (req, res) => {
 
 // Add a new reference to the database
 app.post('/api/add-reference', upload.single('file_ref'), (req, res) => {
-    const { tran_num, tran_date, tran_sum, ref_num, ref_date, ref_sum } = req.body;
+    const { id_buyer,tran_num, tran_date, tran_sum, ref_num, ref_date, ref_sum } = req.body;
     const file = req.file;
   
     // Insert into database and get the unique identifier
-    const query = `INSERT INTO ref_doc (tran_num, tran_date, tran_sum, ref_num, ref_date, ref_sum)
-                   VALUES (?, ?, ?, ?, ?, ?)`;
+    const query = `INSERT INTO ref_doc (id_buyer, tran_num, tran_date, tran_sum, id_seller, ref_num, ref_date, ref_sum)
+                   VALUES (?, ?, ?, ?, ?, ?,?,?)`;
   
-    db.run(query, [tran_num, tran_date, tran_sum, ref_num, ref_date, ref_sum], function(err) {
+    db.run(query, [id_buyer,tran_num, tran_date, tran_sum, id_seller ,ref_num, ref_date, ref_sum], function(err) {
       if (err) {
         console.error('Error inserting new reference:', err);
         return res.status(400).send('Error adding reference');
@@ -118,15 +123,15 @@ app.post('/api/add-reference', upload.single('file_ref'), (req, res) => {
   });
 
 app.put('/api/update-reference/:id',  upload.single('file_ref') ,(req, res) => {
-    const { ref_num, ref_date, ref_sum } = req.body;
+    const { id_seller,ref_num, ref_date, ref_sum } = req.body;
     const { id } = req.params;
     const file = req.file;
 
    const query = `UPDATE ref_doc 
-                   SET ref_num = ?, ref_date = ?, ref_sum = ?
+                   SET id_seller = ?,ref_num = ?, ref_date = ?, ref_sum = ? 
                    WHERE doc_unique = ?`;
 
-    db.run(query, [ref_num, ref_date, ref_sum, id], function(err) {
+    db.run(query, [id_seller,ref_num, ref_date, ref_sum, id], function(err) {
         if (err) {
             console.error('Error updating reference:', err);
             return res.status(400).send("Error updating reference");

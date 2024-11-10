@@ -53,9 +53,11 @@ document.addEventListener('DOMContentLoaded', function () {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${ref.doc_unique}</td>
+                <td>${ref.id_buyer}</td>
                 <td>${ref.tran_num}</td>
                 <td>${ref.tran_date}</td>
                 <td>${formatToIsraeliShekels(ref.tran_sum)}</td>
+                <td>${ref.id_seller}</td>
                 <td>${ref.ref_num}</td>
                 <td>${ref.ref_date}</td>
                 <td>${formatToIsraeliShekels(ref.ref_sum)}</td>
