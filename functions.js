@@ -2,7 +2,11 @@ const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
 
-const uploadDirectory = path.join('/Users', 'marcospinto', 'projects', 'DOCUMENTS', 'references-documentation', 'version5', 'files');
+
+
+// Serve static files from the public directory
+
+const uploadDirectory = path.join( 'public/files');
 // Ensure the directory exists or create it
 if (!fs.existsSync(uploadDirectory)) {
   fs.mkdirSync(uploadDirectory, { recursive: true });
@@ -13,7 +17,6 @@ const upload = multer({
   });
 
 function uploadFile(file,docUnique,ref_num){
-console.log('Temporary file path:', file.path);  // For debugging
 // Construct the new filename and path with path.join
 const fileExt = path.extname(file.originalname);
 const newFilename = `R${docUnique}_${ref_num}${fileExt}`;

@@ -120,7 +120,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 const doc = referenceData.find(ref => ref.doc_unique === Number(docId));
 
                 if (doc) {
-                    console.log(doc.doc_unique);
                     window.openEditModal(doc); // Call the globally exposed edit modal function
                 }
             });
