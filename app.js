@@ -177,7 +177,6 @@ app.get('/api/check-file/:filename', (req, res) => {
         }
 
         // File exists
-        console.log(`File exists: ${filePath}`);
         res.json({ haveFile: true }); // Send response
     });
 });

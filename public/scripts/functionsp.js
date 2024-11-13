@@ -22,6 +22,8 @@ document.addEventListener('DOMContentLoaded', function () {
         var sumRef = document.getElementById('sum-ref');
         var countBuy = document.getElementById('count-buy');
         var countSell = document.getElementById('count-sell');
+        var countTran = document.getElementById('count-tran');
+        var countRef = document.getElementById('count-ref');
         const tableBody = document.querySelector('#scrollable-body tbody');
 
 
@@ -36,19 +38,18 @@ document.addEventListener('DOMContentLoaded', function () {
             var editLink;
             var downloadLink;
 
-            if (window.sharedPermission >= 3|| window.modeDev) {
+            if (window.sharedPermission >= 3 || window.modeDev) {
                 editLink = `<a href="#" class="edit-link" data-id="${ref.doc_unique}">עריכה</a>`;
             }
             else {
                 editLink = "לא ניתן לערוך"
             }
-            if (window.sharedPermission >= 4 || window.modeDev ) {
-             
+            if (window.sharedPermission >= 4 || window.modeDev) {
+
                 downloadLink = `<a class="download-link" data-id="${filename}" target="_blank">אין קובץ מקושר</a>`;
 
             }
-            else 
-            {
+            else {
                 downloadLink = "אין באפשרותך להוריד קובץ"
             }
 
@@ -75,8 +76,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const tranSums = data.map(item => parseFloat(item.tran_sum));
         const refSums = data.map(item => parseFloat(item.ref_sum));
-        const buyerCount = data.map(item => parseFloat(item.id_buyer));
-        const sellerCount = data.map(item => parseFloat(item.id_seller));
+        const tranCount = data.map(item => item.tran_num);
+        const refCount = data.map(item => item.ref_num);
+        const buyerCount = data.map(item => item.id_buyer);
+        const sellerCount = data.map(item => item.id_seller);
+
         // Calculate the total sum
         const totalTranSum = tranSums.reduce((accumulator, currentValue) => {
             if (isNaN(currentValue)) return accumulator;
@@ -88,22 +92,58 @@ document.addEventListener('DOMContentLoaded', function () {
             else return accumulator + currentValue;
         }, 0);
 
-        const totalbuyerCount = buyerCount.reduce((accumulator, currentValue) => {
-            if (isNaN(currentValue)) return accumulator;
-            else return accumulator + 1;
+
+        const totaltranCount = tranCount.reduce((accumulator, currentValue) => {
+            if (currentValue !== undefined && currentValue !== null && currentValue !== '') {
+                // Count valid numbers or non-empty strings
+                if (!isNaN(currentValue) || (typeof currentValue === 'string' && currentValue.trim() !== '')) {
+                    return accumulator + 1;
+                }
+            }
+            return accumulator;
         }, 0);
 
-        const totalsellerCount = sellerCount.reduce((accumulator, currentValue) => {
-            if (isNaN(currentValue)) return accumulator;
-            else return accumulator + 1;
+        const totalrefCount = refCount.reduce((accumulator, currentValue) => {
+            if (currentValue !== undefined && currentValue !== null && currentValue !== '') {
+                // Count valid numbers or non-empty strings
+                if (!isNaN(currentValue) || (typeof currentValue === 'string' && currentValue.trim() !== '')) {
+                    return accumulator + 1;
+                }
+            }
+            return accumulator;
         }, 0);
+
+        const BuyeruniqueValues = new Set();
+        const SelleruniqueValues = new Set();
+
+        buyerCount.forEach(currentValue => {
+            // Check if the current value is valid (not undefined, null, or empty)
+            if (currentValue !== undefined && currentValue !== null && currentValue !== '') {
+                // Add only unique valid values
+                if (!isNaN(currentValue) || (typeof currentValue === 'string' && currentValue.trim() !== '')) {
+                    BuyeruniqueValues.add(currentValue);
+                }
+            }
+        });
+
+        sellerCount.forEach(currentValue => {
+            // Check if the current value is valid (not undefined, null, or empty)
+            if (currentValue !== undefined && currentValue !== null && currentValue !== '') {
+                // Add only unique valid values
+                if (!isNaN(currentValue) || (typeof currentValue === 'string' && currentValue.trim() !== '')) {
+                    SelleruniqueValues.add(currentValue);
+                }
+            }
+        });
 
 
         sumRow.style.visibility = 'visible';
         sumTran.textContent = formatToIsraeliShekels(totalTranSum);
         sumRef.textContent = formatToIsraeliShekels(totalRefSum);
-        countBuy.textContent = totalbuyerCount;
-        countSell.textContent = totalsellerCount
+        countTran.textContent = totaltranCount;
+        countRef.textContent = totalrefCount
+        countBuy.textContent = BuyeruniqueValues.size;
+        countSell.textContent = SelleruniqueValues.size;
 
         if (data.length > 0) {
             sumRow.style.visibility = 'visible';
@@ -128,13 +168,13 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.download-link').forEach(link => {
             const filename = link.dataset.id;
             fetch(`/api/check-file/${filename}`)
-            .then(response => response.json())
-            .then(data =>{
-                if(data.haveFile) {
-                    link.innerHTML=`<a href="/download/${filename}" target="_blank">הורד אסמכתא</a>`;
-                }
-            } );
-       
+                .then(response => response.json())
+                .then(data => {
+                    if (data.haveFile) {
+                        link.innerHTML = `<a href="/download/${filename}" target="_blank">הורד אסמכתא</a>`;
+                    }
+                });
+
         });
     }
 

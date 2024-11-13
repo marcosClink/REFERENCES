@@ -43,7 +43,6 @@ return true;
             console.error('File does not exist or cannot be accessed:', err);
             return false; // File does not exist
         }
-        console.log('File exists.');
         return true; // File exists
     });
 }

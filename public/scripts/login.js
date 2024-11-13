@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var link = document.getElementById('openModal');
     const labelWel = document.getElementById('login-label');
     const modalContent = document.getElementById('login-content');
-    window.modeDev = true;
+    window.modeDev = false;
 
     //starting permission block:
     if (!modeDev) {
@@ -94,8 +94,8 @@ document.addEventListener('DOMContentLoaded', function () {
         //allow to add-file and download files - 'ALL-FUNCTIONS'
         if (permission >= 4) {
             //donwload - in renderTable func
-            element1 = document.getElementById('fileInput');
-            elements.push(element1);
+           // element1 = document.getElementById('fileInput');
+          //  elements.push(element1);
         }
         //admin - now nothing
         if (permission >= 5) {
