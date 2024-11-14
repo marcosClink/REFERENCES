@@ -1,15 +1,22 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const rateLimit = require('express-rate-limit');
 const { permission } = require('process');
 const { db, usersDb } = require('./db');
 const {query} = require('./queries');
 const { Console } = require('console');
 const { uploadFile , upload ,uploadDirectory,checkFileExists} = require('./functions');
 
+
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 100, // 15 sec
+    max: 100 // limit each IP to 100 requests per windowMs//
+});
+
 const app = express();
 
-
+app.use(limiter);
 const PORT = process.env.PORT || 4000;
 
 // Middleware to parse URL-encoded bodies
