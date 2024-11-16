@@ -39,18 +39,18 @@ document.addEventListener('DOMContentLoaded', function () {
             var downloadLink;
 
             if (window.sharedPermission >= 3 || window.modeDev) {
-                editLink = `<a href="#" class="edit-link" data-id="${ref.doc_unique}">עריכה</a>`;
+                editLink = `<a href="#" class="edit-link" data-id="${ref.doc_unique}"> &#x2699;&#xFE0F; </a>`;
             }
             else {
-                editLink = "לא ניתן לערוך"
+                editLink =  '<a>&#128683;</a>' ;
             }
             if (window.sharedPermission >= 4 || window.modeDev) {
 
-                downloadLink = `<a class="download-link" data-id="${filename}" target="_blank">אין קובץ מקושר</a>`;
+                downloadLink = `<a class="download-link" data-id="${filename}" target="_blank">&#x1F6A7;</a>`;
 
             }
             else {
-                downloadLink = "אין באפשרותך להוריד קובץ"
+                downloadLink = '<a>&#128683;</a>' ;
             }
 
             const row = document.createElement('tr');
@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(response => response.json())
                 .then(data => {
                     if (data.haveFile) {
-                        link.innerHTML = `<a href="/download/${filename}" target="_blank">הורד אסמכתא</a>`;
+                        link.innerHTML = `<a href="/download/${filename}" target="_blank">&#128196;</a>`;
                     }
                 });
 
