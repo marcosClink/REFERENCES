@@ -7,16 +7,19 @@ const { db, usersDb } = require('./db');
 const {query} = require('./queries');
 const { Console } = require('console');
 const { uploadFile , upload ,uploadDirectory,checkFileExists} = require('./functions');
+const { console } = require('inspector');
+
+const maxSum = 25000;
 
 
-const limiter = rateLimit({
+/*const limiter = rateLimit({
     windowMs: 15 * 60 * 100, // 15 sec
     max: 100 // limit each IP to 100 requests per windowMs//
-});
+});*/
 
 const app = express();
 
-app.use(limiter);
+//app.use(limiter);
 const PORT = process.env.PORT || 4000;
 
 // Middleware to parse URL-encoded bodies
@@ -153,6 +156,28 @@ app.put('/api/update-reference/:id',  upload.single('file_ref') ,(req, res) => {
         console.log(`Updated reference with ID: ${id}`);
         res.send("Reference updated successfully");
     });
+});
+
+app.get('/api/exceptionals',(req,res)=>{
+
+    const query = `select doc_unique, id_buyer, tran_num, tran_date, tran_sum, id_seller, ref_num, ref_date, ref_sum
+    from ref_doc
+    where  id_buyer in (
+    select id_buyer 
+    from ref_doc 
+    group by id_buyer 
+    having  sum(tran_sum) >= ?)
+    order by id_buyer`;
+
+    db.all(query, [maxSum], function(err,rows) {
+        if (err) {
+            console.error('Error updating reference:', err);
+            return res.status(400).send("Error updating reference");
+        }
+
+        res.status(200).json(rows); // Send the data as a JSON response
+    });
+
 });
 
 // Serve files directly from this folder

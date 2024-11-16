@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var link = document.getElementById('openModal');
     const labelWel = document.getElementById('login-label');
     const modalContent = document.getElementById('login-content');
-    window.modeDev = false;
+    window.modeDev = true;
 
     //starting permission block:
     if (!modeDev) {

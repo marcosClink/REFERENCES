@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const btnALL = document.querySelector('#all-references');
     const btnTreat = document.querySelector('#ref-treat');
     const btnLate= document.querySelector('#ref-late');
+    const btnExcept = document.querySelector('#exceptionals');
 
 // Function to update referenceData globally
     window.setReferenceData = function(data) {
@@ -56,5 +57,21 @@ document.addEventListener('DOMContentLoaded', function () {
    
     }
     btnALL.addEventListener('click', showAllReferences);
+
+
+    function showExceptionals() {
+        // Fetch reference data from the server
+        fetch('/api/exceptionals')
+            .then(response => response.json())
+            .then(data => {
+                referenceData = data; // Save fetched data
+                renderTable(data); // Initial render
+            })
+            .catch(error => {
+                console.error('Error fetching references:', error);
+            });
+       
+        }
+        btnExcept.addEventListener('click', showExceptionals);
 
 });
