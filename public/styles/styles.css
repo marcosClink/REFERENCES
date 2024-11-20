@@ -93,8 +93,8 @@ input {
     width: 190px;
 }
 
-#date-input{
-    width: 100px;
+.date-input{
+    width: 112px;
     text-align: center;
 }
 
@@ -233,4 +233,8 @@ th {
     pointer-events: auto;
     opacity: 1;
     cursor: pointer;
+}
+
+.small{
+    padding: 5px; 
 }

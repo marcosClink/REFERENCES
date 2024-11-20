@@ -3,7 +3,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const opttionsSelect = document.querySelector('#search-options');
     const btnDate =  document.querySelector('#sum-date');
     const opttionDate = document.querySelector('#date-options');
-    const dateInput = document.querySelector('#date-input');
+    const dateInputStart = document.querySelector('#date-input-start');
+    const dateInputEnd = document.querySelector('#date-input-end');
 
     searchInput.addEventListener('input', function () {
             const searchTerm = searchInput.value.toLowerCase();
@@ -28,21 +29,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function showDatesSum ()
         {
-        const selectedDate = opttionDate.value;
             
-        fetch('/api/references')
+        fetch('/api/date-range', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:JSON.stringify({ start:dateInputStart.value, end:dateInputEnd.value , select:opttionDate.value})
+        })
         .then(response => response.json())
         .then(data => {
-            referenceData = data; 
-       
-         const filteredData = referenceData.filter(ref => {
-            const valueToCheck = ref[selectedDate];
-            return  (valueToCheck == dateInput.value);
-        });
-
-
-        renderTable(filteredData);
+            console.log(data.data);
+            renderTable(data);
         })
+        .catch(error => {
+            console.error('Error:', error);
+        });
         }
     btnDate.addEventListener('click',showDatesSum);
 });

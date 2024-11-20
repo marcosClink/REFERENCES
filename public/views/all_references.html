@@ -36,8 +36,11 @@
                     <input type="file" id="fileInput" accept=".csv, .xlsx"/>
                     <button id="upload-references">טען קובץ</button>
                 <div id="sum-date-func">
-                    <button id="sum-date">חשב תאריך</button>
-                    <input type="date" id="date-input" />
+                    <button id="sum-date">הצג טווח תאריכים</button>
+                    <input type="date" class="date-input" id="date-input-end" />
+                    <p>עד ל</p>
+                    <input type="date" class="date-input" id="date-input-start" />
+                    <p>מ</p>
                     <select name="date-options" id="date-options" >
                         <option value="tran_date">תאריך טרנזקציה</option>
                         <option value="ref_date">תאריך העברה</option>
@@ -68,17 +71,18 @@
             <table id="references-table">
                 <thead>
                     <tr>
-                        <th data-column="doc_unique" class="sortable">מספר סידורי</th>
+                       <!--  <th data-column="doc_unique" class="sortable">מספר סידורי</th> -->
                         <th data-column="id_buyer" class="sortable">תעודת זהות קונה</th>
                         <th data-column="tran_num" class="sortable">מספר טרנזקציה</th>
                         <th data-column="tran_date" class="sortable">תאריך טרנזקציה</th>
                         <th data-column="tran_sum" class="sortable">סכום טרנזקציה</th>
+                        <th data-column="tran_sum_no_commition" class="sortable">סכום טרנזקציה ללא עמלה</th>
                         <th data-column="id_seller" class="sortable">תעודת זהות מוכר</th>
                         <th data-column="ref_num" class="sortable">מספר אסמכתא</th>
                         <th data-column="ref_date" class="sortable">תאריך העברה</th>
                         <th data-column="ref_sum" class="sortable">סכום העברה</th>
                         <th> &#128196; </th>
-                        <th>עריכת תיעוד</th>
+                        <th class="small">עריכת תיעוד</th>
                     </tr>
                 </thead>
             </table>
@@ -93,17 +97,18 @@
         <table id="references-table-sum">
             <thead>
                 <tr>
-                    <th data-column="doc_unique" class="sortable"></th>
+                   <!--  <th data-column="doc_unique" class="sortable"></th> -->
                     <th id = 'count-buy' data-column="id_buyer" class="sortable"></th>
                     <th id = 'count-tran' data-column="tran_num" class="sortable"></th>
                     <th data-column="tran_date" class="sortable"></th>
                     <th id = 'sum-tran' data-column="tran_sum" class="sortable"></th>
+                    <th id = 'tran_sum_no_commition' data-column="tran_sum_no_commition" class="sortable"></th>
                     <th id = 'count-sell' data-column="id_seller" class="sortable"></th>
                     <th id = 'count-ref' data-column="ref_num" class="sortable"></th>
                     <th data-column="ref_date" class="sortable"></th>
                     <th id = 'sum-ref' data-column="ref_sum" class="sortable"></th>
                     <th></th>
-                    <th></th>
+                    <th class="small"></th>
                 </tr>
             </thead>
         </table>

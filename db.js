@@ -10,6 +10,8 @@ const db = new sqlite3.Database(path.join( './db/refDb.db'), (err) => {
     }
 });
 
+
+
 const usersDb = new sqlite3.Database(path.join('./db/USERS.db'), (err) => {
     if (err) {
         console.error('Error opening USERS database: ' + err.message);
@@ -17,6 +19,7 @@ const usersDb = new sqlite3.Database(path.join('./db/USERS.db'), (err) => {
         console.log('Connected to the USERS SQLite database.');
     }
 });
+
 
 
 module.exports = {

@@ -1,13 +1,12 @@
 const express = require('express');
+//const { Console } = require('console');
+const { db, usersDb } = require('./db');
 const fs = require('fs');
 const path = require('path');
 const rateLimit = require('express-rate-limit');
 const { permission } = require('process');
-const { db, usersDb } = require('./db');
-const {query} = require('./queries');
-const { Console } = require('console');
 const { uploadFile , upload ,uploadDirectory,checkFileExists} = require('./functions');
-const { console } = require('inspector');
+//const { console } = require('inspector');
 
 const maxSum = 25000;
 
@@ -21,6 +20,8 @@ const app = express();
 
 //app.use(limiter);
 const PORT = process.env.PORT || 4000;
+
+
 
 // Middleware to parse URL-encoded bodies
 app.use(express.urlencoded({ extended: true }));
@@ -101,6 +102,40 @@ app.get('/api/late-references', (req, res) => {
     db.all(query, [], (err, rows) => {
         if (err) {
             console.error('Error retrieving references:', err);
+            return res.status(500).send("Error retrieving references");
+        }
+        res.json(rows); // Send the data as a JSON response
+    });
+});
+app.post('/api/date-range', (req, res) => {
+    const { start, end, select } = req.body;
+
+    // Validate the column name
+    const allowedColumns = ["tran_date", "ref_date"]; // Example of allowed columns
+    if (!allowedColumns.includes(select)) {
+        return res.status(400).send("Invalid column name for 'select'");
+    }
+
+    // Dynamically construct the query
+    const query = `
+        SELECT
+            id_buyer,
+            tran_num,
+            tran_date,
+            tran_sum,
+            id_seller,
+            ref_num,
+            ref_date,
+            ref_sum
+        FROM ref_doc
+        WHERE ${select} >= ? AND ${select} <= ?
+        ORDER BY ${select} DESC;
+    `;
+
+    // Execute the query
+    db.all(query, [start, end], (err, rows) => {
+        if (err) {
+            console.error("Error retrieving references:", err);
             return res.status(500).send("Error retrieving references");
         }
         res.json(rows); // Send the data as a JSON response
@@ -276,6 +311,7 @@ app.post('/api/login', (req, res) => {
         res.status(200).json({ message: 'success', workername: row.name_worker , permission:row.doc_references_permission});
     });
 });
+
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

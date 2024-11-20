@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         var sumRow = document.getElementById('references-table-sum');
         var sumTran = document.getElementById('sum-tran');
+        var sumTranNoComm = document.getElementById('tran_sum_no_commition');
         var sumRef = document.getElementById('sum-ref');
         var countBuy = document.getElementById('count-buy');
         var countSell = document.getElementById('count-sell');
@@ -55,17 +56,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${ref.doc_unique}</td>
                 <td>${ref.id_buyer}</td>
                 <td>${ref.tran_num}</td>
                 <td>${ref.tran_date}</td>
                 <td>${formatToIsraeliShekels(ref.tran_sum)}</td>
+                <td>${formatToIsraeliShekels((0.9*ref.tran_sum))}</td>
                 <td>${ref.id_seller}</td>
                 <td>${ref.ref_num}</td>
                 <td>${ref.ref_date}</td>
                 <td>${formatToIsraeliShekels(ref.ref_sum)}</td>
                 <td>${downloadLink}</td>
-                <td>${editLink}</td>
+                <td class = "small">${editLink}</td>
             `;
 
             if (colorRowsAttention(ref, row))
@@ -139,11 +140,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         sumRow.style.visibility = 'visible';
         sumTran.textContent = formatToIsraeliShekels(totalTranSum);
+        sumTranNoComm.textContent = formatToIsraeliShekels(0.9*totalTranSum);
         sumRef.textContent = formatToIsraeliShekels(totalRefSum);
         countTran.textContent = totaltranCount;
         countRef.textContent = totalrefCount
         countBuy.textContent = BuyeruniqueValues.size;
         countSell.textContent = SelleruniqueValues.size;
+        
 
         if (data.length > 0) {
             sumRow.style.visibility = 'visible';
