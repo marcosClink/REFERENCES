@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${ref.id_buyer}</td>
+                <td >${ref.id_buyer}</td>
                 <td>${ref.tran_num}</td>
                 <td>${ref.tran_date}</td>
                 <td>${formatToIsraeliShekels(ref.tran_sum)}</td>

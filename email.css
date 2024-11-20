@@ -1,0 +1,32 @@
+.table-container {
+    width: 80%;
+    margin: 20px 0;
+}
+
+table {
+    width: 100%;
+    /* Set the table width */
+    border-collapse: collapse;
+    /* Collapse borders for cleaner look */
+    background-color: var(--grey);
+    /* Set background color */
+    max-height: 300px;
+    table-layout: fixed;
+}
+
+th,
+td {
+    border: 1px solid #ddd;
+    /* Add a border to table cells */
+    padding: 3px;
+    /* Space around text */
+    text-align: center;
+    /* Center text */
+}
+
+th {
+    background-color: #f2f2f2;
+    /* Header background color */
+    color: #555;
+    /* Header text color */
+}

@@ -1,0 +1,93 @@
+/* Ensuring the attention cell has proper alignment */
+.attention {
+    display: flex;
+    align-items: center; /* Vertically centers text and circle */
+    justify-content: flex-start; /* Left aligns text */
+    padding-right: 20px; /* Space for the circle */
+    height: 100%; /* Full height of the td */
+    line-height: 1.5; /* Vertically aligns text within the td */
+  }
+  
+  /* Adding the circle after the text */
+  .attention::after {
+    content: '';
+    width: 10px; /* Circle size */
+    height: 10px; /* Circle size */
+    background-color: red;
+    border-radius: 50%;
+    margin-left: 8px; /* Space between text and circle */
+    margin-top: 0px; /* Ensure no extra vertical offset */
+    vertical-align: middle; /* Align the circle with the middle of the text */
+  }
+  
+  /* General table styles */
+  table {
+    border-collapse: collapse; /* Collapse borders for cleaner look */
+    background-color: var(--grey); /* Set background color */
+    width: 100%; /* Ensure full width */
+  }
+
+  #table-part{
+margin-left: 15px;
+margin-right:15px ;
+  }
+  
+  /* Table header and cell styles */
+  th, td {
+    border: 1px solid #ddd; /* Border for cells */
+    padding: 8px; /* Cell padding */
+    text-align: center; /* Center text */
+    vertical-align: middle; /* Vertically center content in cells */
+  }
+  
+  th {
+    background-color: #f2f2f2; /* Header background */
+    color: #555; /* Header text color */
+  }
+  
+  .attention-row {
+    background-color: rgb(247, 88, 88); /* Highlight color for attention rows */
+    color: white; /* Text color for better contrast */
+  }
+  
+  /* Scrollable body area */
+  #scrollable-body {
+    max-height: 300px; /* Match this to the table wrapper height */
+    overflow-y: auto; /* Enable vertical scrolling */
+  }
+  
+  /* Ensuring fixed table layout */
+  #references-table, #references-table-sum {
+    table-layout: fixed; /* Keeps columns fixed in size */
+    width: 100%; /* Table width */
+    max-height: 300px;
+  }
+  
+  /* Hidden table for sums */
+  #references-table-sum {
+    visibility: hidden;
+  }
+  
+  #references-table-sum th {
+    background-color: #7a7a7a; /* Header background color */
+    color: #f6f2f2; /* Header text color */
+    border: 1px solid #070707; /* Border for sum table */
+    padding: 8px; /* Padding for sum table */
+    text-align: center; /* Center text in sum table */
+  }
+  
+  /* Labels for sum fields */
+  .sum-tran-date, .sum-ref-date {
+    position: absolute;
+    visibility: hidden; /* Hide labels initially */
+    margin-top: 2px;
+  }
+  
+  .sum-tran-date {
+    left: 625px;
+  }
+  
+  .sum-ref-date {
+    left: 1150px;
+  }
+  

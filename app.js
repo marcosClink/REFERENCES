@@ -5,7 +5,8 @@ const fs = require('fs');
 const path = require('path');
 const rateLimit = require('express-rate-limit');
 const { permission } = require('process');
-const { uploadFile , upload ,uploadDirectory,checkFileExists} = require('./functions');
+const { uploadFile, upload, uploadDirectory, checkFileExists, generateHtmlContent } = require('./functions');
+const sendEmail = require('./emailSender');
 //const { console } = require('inspector');
 
 const maxSum = 25000;
@@ -32,7 +33,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Serve the main HTML page
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public' ,'views', 'all_references.html'));
+    res.sendFile(path.join(__dirname, 'public', 'views', 'all_references.html'));
 });
 
 // Fetch all references from the database
@@ -145,44 +146,64 @@ app.post('/api/date-range', (req, res) => {
 
 // Add a new reference to the database
 app.post('/api/add-reference', upload.single('file_ref'), (req, res) => {
-    const { id_buyer,tran_num, tran_date, tran_sum, id_seller ,ref_num, ref_date, ref_sum } = req.body;
+    const { id_buyer, tran_num, tran_date, tran_sum, id_seller, ref_num, ref_date, ref_sum } = req.body;
     const file = req.file;
-  
+
     // Insert into database and get the unique identifier
     const query = `INSERT INTO ref_doc (id_buyer, tran_num, tran_date, tran_sum, id_seller, ref_num, ref_date, ref_sum)
                    VALUES (?, ?, ?, ?, ?, ?,?,?)`;
-  
-    db.run(query, [id_buyer,tran_num, tran_date, tran_sum, id_seller ,ref_num, ref_date, ref_sum], function(err) {
-      if (err) {
-        console.error('Error inserting new reference:', err);
-        return res.status(400).send('Error adding reference');
-      }
-  
-    var docUnique = this.lastID;  // Assuming this gives the last inserted ID
-      if(file)
-        if(!uploadFile(file,docUnique,ref_num))  return res.status(500).send('File processing error');
+    const query1 = `select id_buyer as user_id , count(tran_num) as deals_num ,sum(tran_sum) as deals_sum from ref_doc where id_buyer=? 
+    group by id_buyer having  sum(tran_sum) >= ?`;
 
-      console.log(`Added reference with ID: ${docUnique}`);
-      res.status(201).send('Reference added successfully');
+    db.run(query, [id_buyer, tran_num, tran_date, tran_sum, id_seller, ref_num, ref_date, ref_sum], function (err) {
+        if (err) {
+            console.error('Error inserting new reference:', err);
+            return res.status(400).send('Error adding reference');
+        }
+
+        var docUnique = this.lastID;  // Assuming this gives the last inserted ID
+        if (file)
+            if (!uploadFile(file, docUnique, ref_num)) return res.status(500).send('File processing error');
+
+        console.log(`Added reference with ID: ${docUnique}`);
     });
-  });
 
-app.put('/api/update-reference/:id',  upload.single('file_ref') ,(req, res) => {
-    const { id_seller,ref_num, ref_date, ref_sum } = req.body;
-    const { id } = req.params;
-    const file = req.file;
-
-   const query = `UPDATE ref_doc 
-                   SET id_seller = ?,ref_num = ?, ref_date = ?, ref_sum = ? 
-                   WHERE doc_unique = ?`;
-
-    db.run(query, [id_seller,ref_num, ref_date, ref_sum, id], function(err) {
+    db.all(query1, [id_buyer, maxSum], function (err, rows) {
         if (err) {
             console.error('Error updating reference:', err);
             return res.status(400).send("Error updating reference");
         }
-        if(file)
-            if(!uploadFile(file,id,ref_num))  return res.status(500).send('File processing error');
+        if (rows.length != 0) {
+            const htmlContent = generateHtmlContent(rows);
+            sendEmail(
+                process.env.EMAIL_SEND_TO,
+                //'marcosspinto18@gmail.com',
+                'עדכון עבור חריגים חדשים לטיפול',
+                'עדכון חריגים',
+                htmlContent
+            );
+        }
+    });
+
+    res.status(201).send('Reference added successfully');
+});
+
+app.put('/api/update-reference/:id', upload.single('file_ref'), (req, res) => {
+    const { id_seller, ref_num, ref_date, ref_sum } = req.body;
+    const { id } = req.params;
+    const file = req.file;
+
+    const query = `UPDATE ref_doc 
+                   SET id_seller = ?,ref_num = ?, ref_date = ?, ref_sum = ? 
+                   WHERE doc_unique = ?`;
+
+    db.run(query, [id_seller, ref_num, ref_date, ref_sum, id], function (err) {
+        if (err) {
+            console.error('Error updating reference:', err);
+            return res.status(400).send("Error updating reference");
+        }
+        if (file)
+            if (!uploadFile(file, id, ref_num)) return res.status(500).send('File processing error');
 
 
         if (this.changes === 0) {
@@ -193,7 +214,7 @@ app.put('/api/update-reference/:id',  upload.single('file_ref') ,(req, res) => {
     });
 });
 
-app.get('/api/exceptionals',(req,res)=>{
+app.get('/api/exceptionals', (req, res) => {
 
     const query = `select doc_unique, id_buyer, tran_num, tran_date, tran_sum, id_seller, ref_num, ref_date, ref_sum
     from ref_doc
@@ -204,7 +225,7 @@ app.get('/api/exceptionals',(req,res)=>{
     having  sum(tran_sum) >= ?)
     order by id_buyer`;
 
-    db.all(query, [maxSum], function(err,rows) {
+    db.all(query, [maxSum], function (err, rows) {
         if (err) {
             console.error('Error updating reference:', err);
             return res.status(400).send("Error updating reference");
@@ -223,14 +244,14 @@ app.get('/download/:filename', (req, res) => {
     const filename = req.params.filename;
     const filePath = path.join(uploadDirectory, filename);
 
-            // Serve the file with a downloaded header
-            res.download(filePath, filename, (err) => {
-            if (err) {
-                console.error('File download error:', err);
-                res.status(500).send('Error downloading file.');
-            }
-            });
-       
+    // Serve the file with a downloaded header
+    res.download(filePath, filename, (err) => {
+        if (err) {
+            console.error('File download error:', err);
+            res.status(500).send('Error downloading file.');
+        }
+    });
+
 });
 
 
@@ -254,24 +275,23 @@ app.delete('/api/delete-trans/:id', async (req, res) => {
 
     console.log("Received request to delete transaction with ID:", id);
     console.log("Filename to delete:", filename);
-    
+
     const filePath = path.join(uploadDirectory, filename);
 
-    db.run(`delete from ref_doc WHERE doc_unique = ?`,[id], function(err) {
+    db.run(`delete from ref_doc WHERE doc_unique = ?`, [id], function (err) {
         if (err) {
             console.error('Error deleting reference:', err);
             return res.status(400).send("Error deleting reference");
         }
         if (this.changes === 0) {
-           return res.status(400).send({ message: 'Reference not found' });
+            return res.status(400).send({ message: 'Reference not found' });
         }
 
         fs.access(filePath, fs.constants.F_OK, (err) => {
             if (err) {
-               console.log("no file");
+                console.log("no file");
             }
-            else
-            {
+            else {
                 fs.unlink(filePath, (err) => {
                     if (err) {
                         console.error('Error deleting file:', err);
@@ -279,9 +299,9 @@ app.delete('/api/delete-trans/:id', async (req, res) => {
                     console.log('File deleted successfully:', filePath);
                 });
             }
-        
+
         });
-        
+
         console.log(`deleted reference with ID: ${id}`);
         return res.status(200).send({ message: 'deleted successfully' });
     });
@@ -298,17 +318,17 @@ app.post('/api/login', (req, res) => {
         }
 
         if (!row) {
-            return res.status(200).json({message:'User not found!'});
+            return res.status(200).json({ message: 'User not found!' });
         }
 
         // Compare the provided password with the stored hashed password
-        const isValidPassword = password == row.password ;
+        const isValidPassword = password == row.password;
         if (!isValidPassword) {
-            return res.status(200).json({message:'Invalid credentials!'});
+            return res.status(200).json({ message: 'Invalid credentials!' });
         }
 
         // Respond with success message if login is successful
-        res.status(200).json({ message: 'success', workername: row.name_worker , permission:row.doc_references_permission});
+        res.status(200).json({ message: 'success', workername: row.name_worker, permission: row.doc_references_permission });
     });
 });
 
@@ -316,3 +336,7 @@ app.post('/api/login', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+
+
+

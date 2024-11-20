@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
+const juice = require('juice');
 
 
 
@@ -47,9 +48,60 @@ return true;
     });
 }
 
+function generateHtmlContent(exceptionalUsers) {
+  let html = `
+      <h1>עדכון עבור תעודה זהות שחרגה</h1>
+      <div class="table-container">
+          <table>
+              <thead>
+                  <tr>
+                      <th>תעודה זהות</th>
+                      <th>כמות עסקאות</th>
+                      <th>סכום עסקאות</th>
+                  </tr>
+              </thead>
+          </table>
+          <table id="content-table">
+              <tbody>
+                  ${exceptionalUsers.map(user => `
+                          <tr>
+                              <td>${user.user_id}</td>
+                              <td>${user.deals_num}</td>
+                              <td>${formatToIsraeliShekels(user.deals_sum)}</td>
+                          </tr>
+                      `).join('')
+      }
+              </tbody>
+          </table>
+      </div>
+  `;
+
+  // Read the content of your CSS file
+  const css = fs.readFileSync('./email.css', 'utf8');
+
+  // Use Juice to apply the CSS to your HTML and inline it
+  const htmlWithStylesInlined = juice.inlineContent(html, css);
+  return htmlWithStylesInlined;
+}
+
+function formatToIsraeliShekels(amount) {
+  // Create a formatter for Israeli Shekels and Hebrew/Israel locale
+  const formatter = new Intl.NumberFormat('he-IL', {
+      style: 'currency',
+      currency: 'ILS',
+      minimumFractionDigits: 2, // Ensures two decimal places
+      maximumFractionDigits: 2,
+  });
+
+  // Format the number
+  return formatter.format(amount);
+}
+
+
 module.exports = {
     uploadFile,
     upload,
     uploadDirectory,
-    checkFileExists
+    checkFileExists,
+    generateHtmlContent
 }

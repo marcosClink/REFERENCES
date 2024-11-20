@@ -1,0 +1,161 @@
+/* Base root colors */
+:root {
+    --pink : #ffc5c5;
+    --blue: #072dac;
+    --grey: #f2f2f2;
+    --green: #efece6;
+    --cream: #fff9f2;
+}
+
+/* Global styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: var(--cream);
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    color: var(--blue);
+    width: 100%;
+}
+
+/* Header styling */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #f1f1f1;
+    margin-bottom: 20px;
+}
+
+#login-label {
+    margin-right: 20px;
+}
+
+.logo {
+    width: 200px;
+    margin-left: 20px;
+}
+
+/* Styling for buttons */
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    height: 50px;
+    margin: 4px;
+    border-radius: 8px;
+    width: 200px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Styling for input elements */
+input, select {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+
+#fileInput {
+    width: 190px;
+}
+
+.date-input {
+    width: 112px;
+    text-align: center;
+}
+
+#search-input {
+    width: 313px;
+}
+
+/* Table styling */
+table {
+    border-collapse: collapse; /* Ensures no space between table borders */
+    width: 100%; /* Makes the table use the full width */
+}
+
+th, td {
+    border: 1px solid #ddd; /* Add borders to cells */
+    padding: 8px; /* Space for text */
+    text-align: center; /* Center the text */
+    vertical-align: middle; /* Center the text vertically */
+}
+
+th {
+    background-color: #f2f2f2; /* Light grey header */
+    color: #555;
+}
+
+.attention {
+    display: flex;
+    align-items: center; /* Vertically center the content */
+    justify-content: flex-start; /* Align the text to the left */
+    padding-right: 15px; /* Space for the circle */
+    height: 100%;
+    line-height: 1.5;
+}
+
+.attention::after {
+    content: '';
+    width: 10px; /* Circle size */
+    height: 10px; /* Circle size */
+    background-color: red;
+    border-radius: 50%;
+    margin-left: 8px; /* Space between text and circle */
+    vertical-align: middle; /* Ensures it aligns with text */
+}
+
+/* Highlight row for attention */
+.attention-row {
+    background-color: rgb(247, 88, 88);
+    color: white;
+}
+
+/* Scrollable content */
+#scrollable-body {
+    max-height: 300px;
+    overflow-y: auto; /* Vertical scrolling */
+}
+
+/* Utility for clickable/non-clickable elements */
+.not-clickable {
+    pointer-events: none; /* Disables clicks */
+    opacity: 0.5; /* Makes the element appear faded */
+    cursor: not-allowed; /* Change cursor to indicate it's disabled */
+}
+
+.clickable {
+    pointer-events: auto;
+    opacity: 1;
+    cursor: pointer;
+}
+
+/* Ensure table structure is fixed */
+#references-table, #references-table-sum {
+    table-layout: fixed; /* Keep table layout fixed */
+    width: 100%;
+    max-height: 300px;
+}
+
+#references-table-sum {
+    visibility: hidden;
+}
+
+#references-table-sum th {
+    background-color: #7a7a7a;
+    color: #f6f2f2;
+    border: 1px solid #070707;
+    padding: 8px;
+    text-align: center;
+}
